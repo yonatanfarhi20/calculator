@@ -1,0 +1,61 @@
+name: Build and Release C Project
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch: # מאפשר הפעלה ידנית לבדיקות
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build for ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - target: windows-x86_64
+            os: windows-latest
+            compile_cmd: gcc calculator.c -o app-windows-x86_64.exe
+            artifact: app-windows-x86_64.exe
+          
+          - target: linux-x86_64
+            os: ubuntu-latest
+            compile_cmd: gcc calculator.c -o app-linux-x86_64
+            artifact: app-linux-x86_64
+            
+          - target: linux-arm64
+            os: ubuntu-latest
+            setup: sudo apt-get update && sudo apt-get install -y gcc-aarch64-linux-gnu
+            compile_cmd: aarch64-linux-gnu-gcc calculator.c -o app-linux-arm64
+            artifact: app-linux-arm64
+            
+          - target: macos-x86_64
+            os: macos-13
+            compile_cmd: gcc calculator.c -o app-macos-x86_64
+            artifact: app-macos-x86_64
+            
+          - target: macos-arm64
+            os: macos-14
+            compile_cmd: gcc calculator.c -o app-macos-arm64
+            artifact: app-macos-arm64
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies (Linux ARM only)
+        if: ${{ matrix.setup != '' }}
+        run: ${{ matrix.setup }}
+
+      - name: Compile Code
+        run: ${{ matrix.compile_cmd }}
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.artifact }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
