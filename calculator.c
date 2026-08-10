@@ -2,6 +2,7 @@
 
 void print_addition(double, double);
 void print_subtraction(double, double);
+void print_multiplication(double, double);
 
 int main(){
     
@@ -13,4 +14,8 @@ void print_addition(double a, double b) {
 
 void print_subtraction(double a, double b) {
     printf("%.2f\n", a - b);
+}
+
+void print_multiplication(double a, double b) {
+    printf("%.2f\n", a * b);
 }
