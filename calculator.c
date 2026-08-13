@@ -45,3 +45,28 @@ void route(double a, char op, double b)
         exit(0);
     }
 }
+
+int main(void)
+{
+    double a;
+    double b;
+    char op;
+    int choice;
+
+    printf("Welcome to the calculator\n");
+
+    while (1) {
+        printf("Enter a number, an operator, and another number (number operator number):\n");
+        scanf("%lf %c %lf", &a, &op, &b);
+        route(a, op, b);
+
+        printf("1. Calculate another operation\n");
+        printf("2. Exit the system\n");
+        scanf("%d", &choice);
+
+        if (choice != 1) {
+            printf("Closing the program\n");
+            exit(0);
+        }
+    }
+}
