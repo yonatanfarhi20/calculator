@@ -9,3 +9,8 @@ void subtract(double a, double b)
 {
     printf("%g\n", a - b);
 }
+
+double multiply(double a, double b)
+{
+    printf("%g\n", a * b);
+}
